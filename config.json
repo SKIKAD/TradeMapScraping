@@ -1,6 +1,7 @@
 {
 	"export_to_sql": false,
 	"insert_to_database": true,
+  "bulk_insert": false,
 	"type":["Export", "Import"],
     "reporter_codes": [
         "156",

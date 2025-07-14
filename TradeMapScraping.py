@@ -253,7 +253,7 @@ def export_sql(all_sql_lines, output_file):
 
 def insert_sql_to_database(sql_lines):
     cursor = None
-    retry_count = 3
+    retry_count = 10
     for attempt in range(retry_count):
         try:
             conn = pymysql.connect(
@@ -358,6 +358,8 @@ for r_code in reporter_codes:
                     if fpath:
                         sqls = parse_html_to_sql(fpath, alpha_map, r_code, p_code, trade_type)
                         if sqls:
+                            if config.get("insert_to_database") and not config.get("bulk_insert"): # insert per bilateral
+                                insert_sql_to_database(sqls)
                             all_sqls.extend(sqls)
                         else:
                             log_fail(f"[SQL] No SQL generated from {fpath}")
@@ -389,7 +391,7 @@ for r_code in reporter_codes:
     if all_sqls:
         if config.get("export_to_sql"):
             export_sql(all_sqls, f"tbtrade_{r_code}_{trade_type}.sql")
-        if config.get("insert_to_database"):
+        if config.get("insert_to_database") and config.get("bulk_insert"): # bulk insert
             insert_sql_to_database(all_sqls)
     else:
         log_fail(f"[WARN] No SQL lines to export for reporter {r_code}")
