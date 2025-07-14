@@ -22,3 +22,8 @@ py -3.10 -m pip install --trusted-host pypi.org --trusted-host files.pythonhoste
 ```
 python TradeMapScraping.py
 ```
+or
+
+```
+py -3.10 TradeMapScraping.py
+```
